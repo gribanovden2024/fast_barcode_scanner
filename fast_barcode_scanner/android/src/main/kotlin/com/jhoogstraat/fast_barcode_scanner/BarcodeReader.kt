@@ -101,10 +101,14 @@ class BarcodeReader(private val flutterTextureEntry: TextureRegistry.SurfaceText
 
     fun toggleTorch(result: Result) {
         if (!isInitialized) return
+
+        val context = activity ?: return  // Ensure activity is not null
+
         camera.cameraControl.enableTorch(camera.cameraInfo.torchState.value != TorchState.ON).addListener(Runnable {
             result.success(camera.cameraInfo.torchState.value == TorchState.ON)
-        }, ContextCompat.getMainExecutor(activity))
+        }, ContextCompat.getMainExecutor(context))
     }
+
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(activity!!.applicationContext, it) == PackageManager.PERMISSION_GRANTED
